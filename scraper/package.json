@@ -1,0 +1,28 @@
+{
+  "name": "pms-scraper",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SEBI PMS data scraper",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "scrape": "tsx src/index.ts",
+    "progress": "tsx src/progress.ts",
+    "test": "tsx src/test-fetch.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "p-limit": "^4.0.0",
+    "puppeteer": "^22.15.0",
+    "sql.js": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/sql.js": "^1.4.9",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
