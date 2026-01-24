@@ -4,11 +4,30 @@
 
 ---
 
+## Reminders
+
+> **For January 25, 2026 (Tomorrow Morning):**
+> - Investigate missing PMS data (Marcellus and others not showing up)
+> - Check MF scraping progress - should be close to completion
+> - Review PMS/MF module UX design thoughts from yesterday's discussion
+
+---
+
 ## In Progress
 
 ### MF Data Scraping
 - [ ] Complete MF NAV history scraping (currently 71.9% - 26,849/37,370 schemes)
 - [ ] Monitor scraper for errors and restart if needed
+
+---
+
+## Bugs / Data Issues
+
+### PMS Data Incomplete
+- [ ] **Missing PMS providers** - Some major PMS like Marcellus not found in database
+- [ ] Investigate SEBI scraping - may have missed some providers or data
+- [ ] Re-scrape or supplement PMS data to ensure completeness
+- [ ] Verify all major PMS providers are included (Marcellus, Motilal Oswal, ASK, etc.)
 
 ---
 
