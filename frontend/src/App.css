@@ -1,11 +1,23 @@
-/* Root variables */
+/* Root variables - Permabullish Design System */
 :root {
-  --primary: #4f46e5;
-  --primary-dark: #4338ca;
-  --primary-light: #eef2ff;
+  /* Navy palette */
+  --primary: #1e3a5f;
+  --primary-dark: #102a43;
+  --primary-light: #243b53;
+  --primary-muted: #334e68;
+  --primary-subtle: #9fb3c8;
+
+  /* Saffron accent */
+  --accent: #e8913a;
+  --accent-hover: #d97316;
+  --accent-light: #fdecd4;
+
+  /* Semantic colors */
   --success: #10b981;
-  --warning: #f59e0b;
+  --warning: #e8913a;
   --danger: #ef4444;
+
+  /* Gray scale */
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
@@ -16,8 +28,14 @@
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
+
+  /* Layout */
   --max-width: 1400px;
   --content-padding: 2rem;
+
+  /* Typography */
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', 'Inter', system-ui, sans-serif;
 }
 
 /* App Layout */
@@ -30,7 +48,7 @@
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
   color: white;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -54,9 +72,14 @@
 }
 
 .logo h1 {
+  font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.025em;
+}
+
+.logo h1 .accent {
+  color: var(--accent);
 }
 
 .nav {
@@ -89,12 +112,23 @@
 
 /* Footer */
 .footer {
-  background: var(--gray-800);
-  color: var(--gray-400);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  color: var(--primary-subtle);
   padding: 1.5rem var(--content-padding);
   text-align: center;
   font-size: 0.875rem;
   margin-top: auto;
+}
+
+.footer .brand {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.footer .brand .accent {
+  color: var(--accent);
 }
 
 /* Page Headers */
@@ -102,7 +136,8 @@
 .pms-list-page h2,
 .pms-detail-page h2,
 .compare-page h2 {
-  color: var(--gray-800);
+  font-family: var(--font-display);
+  color: var(--primary);
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
@@ -133,8 +168,8 @@
 }
 
 .stat-icon {
-  background: var(--primary-light);
-  color: var(--primary);
+  background: var(--accent-light);
+  color: var(--accent);
   width: 56px;
   height: 56px;
   border-radius: 14px;
@@ -245,14 +280,14 @@
 
 /* Buttons and Links */
 .btn-link {
-  color: var(--primary);
+  color: var(--accent);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.15s;
 }
 
 .btn-link:hover {
-  color: var(--primary-dark);
+  color: var(--accent-hover);
   text-decoration: underline;
 }
 
@@ -271,8 +306,8 @@
 }
 
 .search-box:focus-within {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .search-box input {
@@ -330,7 +365,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--primary);
+  color: var(--primary-muted);
   text-decoration: none;
   margin-bottom: 1.5rem;
   font-weight: 500;
@@ -338,7 +373,7 @@
 }
 
 .back-link:hover {
-  color: var(--primary-dark);
+  color: var(--primary);
 }
 
 .pms-header {
@@ -453,8 +488,8 @@
 
 .search-dropdown input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
 }
 
 .dropdown-results {
@@ -531,8 +566,8 @@
 }
 
 .pms-period-badge {
-  background: var(--primary-light);
-  color: var(--primary);
+  background: var(--accent-light);
+  color: var(--accent);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
@@ -563,7 +598,7 @@
 }
 
 .quick-stat svg {
-  color: var(--primary);
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -632,8 +667,8 @@
 }
 
 .tab-button.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
 
 .tab-button .tab-icon {
@@ -720,8 +755,8 @@
 }
 
 .approach-card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(232, 145, 58, 0.15);
 }
 
 .approach-header {

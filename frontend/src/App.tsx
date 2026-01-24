@@ -16,7 +16,7 @@ function App() {
           <header className="header">
             <div className="header-content">
               <Link to="/" className="logo">
-                <h1>PMS Tracker</h1>
+                <h1>Perma<span className="accent">bullish</span></h1>
               </Link>
               <nav className="nav">
                 <Link to="/">Dashboard</Link>
@@ -34,6 +34,7 @@ function App() {
             </Routes>
           </main>
           <footer className="footer">
+            <p className="brand">Perma<span className="accent">bullish</span></p>
             <p>Data source: SEBI Portfolio Manager Monthly Reports</p>
           </footer>
         </div>
