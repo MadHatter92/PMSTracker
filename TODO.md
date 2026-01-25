@@ -1,15 +1,34 @@
 # Permabullish - Master To-Do List
 
-> Last updated: January 24, 2026
+> Last updated: January 25, 2026
+
+**See [ROADMAP.md](./ROADMAP.md) for full production launch plan**
 
 ---
 
-## Reminders
+## Current Sprint: Phase 1 - Data Foundation
 
-> **For January 25, 2026 (Tomorrow Morning):**
-> - Investigate missing PMS data (Marcellus and others not showing up)
-> - Check MF scraping progress - should be close to completion
-> - Review PMS/MF module UX design thoughts from yesterday's discussion
+> **Estimated: 2-3 days**
+
+### MF Scraping (In Progress)
+- [ ] Complete MF NAV history scraping (currently ~88%)
+- [ ] Verify data integrity
+- [ ] Document any failed schemes
+
+### PMS Data Fixes
+- [ ] Investigate missing providers (Marcellus, etc.)
+- [ ] Re-scrape or supplement missing data
+- [ ] Verify against SEBI registered list
+
+### Data Optimization
+- [ ] Write script to compute MF metrics from NAV history
+- [ ] Run optimization (10GB → ~100MB)
+- [ ] Validate computed metrics
+
+### Production Database
+- [ ] Set up Render PostgreSQL
+- [ ] Design unified schema
+- [ ] Import optimized data
 
 ---
 
