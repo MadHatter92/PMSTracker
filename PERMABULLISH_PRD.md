@@ -1395,6 +1395,80 @@ Integration with Zerodha's MCP (Model Context Protocol) servers to enable:
 └─────────────────────────────────────────────────────────┘
 ```
 
+### Operations & Monitoring
+
+#### Automated Admin Reports
+
+The platform includes automated reporting infrastructure for monitoring user growth and platform health:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              AUTOMATED REPORTING SYSTEM                  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌─────────────────────────────────────────────────┐   │
+│  │           RENDER CRON JOBS                       │   │
+│  │                                                  │   │
+│  │  ┌─────────────────┐  ┌─────────────────┐      │   │
+│  │  │   Daily Report  │  │  Weekly Report  │      │   │
+│  │  │   (9:00 AM UTC) │  │  (Mon 9:00 AM)  │      │   │
+│  │  └────────┬────────┘  └────────┬────────┘      │   │
+│  │           │                    │                │   │
+│  │           └────────┬───────────┘                │   │
+│  │                    │                            │   │
+│  │                    ▼                            │   │
+│  │  ┌─────────────────────────────────────────┐   │   │
+│  │  │        send_user_report.py              │   │   │
+│  │  │  • Platform stats (users, reports,      │   │   │
+│  │  │    portfolios, watchlists)              │   │   │
+│  │  │  • New user list with details           │   │   │
+│  │  │  • Per-user activity metrics            │   │   │
+│  │  └────────────────────┬────────────────────┘   │   │
+│  │                       │                         │   │
+│  │                       ▼                         │   │
+│  │  ┌─────────────────────────────────────────┐   │   │
+│  │  │          Resend API / SMTP              │   │   │
+│  │  │     (sends email to admin inbox)        │   │   │
+│  │  └─────────────────────────────────────────┘   │   │
+│  └─────────────────────────────────────────────────┘   │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Report Contents:**
+| Section | Daily Report | Weekly Report |
+|---------|--------------|---------------|
+| Platform Overview | Total users, Google OAuth users, total reports, portfolios, watchlists | Same |
+| New Users | Users from last 24 hours | Users from last 7 days |
+| User Details | Email, name, auth provider, join date, reports generated | Same |
+
+**Technical Implementation:**
+- **Scheduler:** Render Cron Jobs
+- **Email Provider:** Resend API (primary), SMTP (fallback)
+- **Scripts Location:** `backend/scripts/send_user_report.py`
+- **Configuration:** Environment variables in Render dashboard
+
+#### User Export Scripts
+
+Additional admin utilities for user management:
+
+| Script | Purpose | Output Formats |
+|--------|---------|----------------|
+| `export_users.py` | Export all users or filtered subset | Table, CSV, JSON, emails-only |
+| `weekly_new_users.py` | Get new users from last N days | Report, CSV, JSON, emails-only |
+
+**Usage Examples:**
+```bash
+# Export all Google OAuth users as CSV
+python scripts/export_users.py --google-only --format csv
+
+# Get new users from last 30 days
+python scripts/weekly_new_users.py --days 30
+
+# Export just email addresses for marketing
+python scripts/export_users.py --emails-only
+```
+
 ---
 
 ## Pricing & Monetization
@@ -1737,6 +1811,7 @@ Zrdha│           │           │           │           │█████�
 | 2.0 | Jan 2026 | Product Team | Added Business Pillars, User Flows, Design Philosophy, Pricing & Monetization, Launch Strategy. Updated MF module with navigation focus. |
 | 2.1 | Jan 2026 | Product Team | Added comprehensive Design System Specifications including color palette (Navy & Saffron), typography (DM Serif Display, DM Sans, Inter), component specs, icons, shadows, spacing, and animation guidelines. |
 | 2.2 | Jan 2026 | Product Team | Major expansion: Added Flow 3 (Research-First), Complete Portfolio Journey diagram, Abstraction Levels concept. Expanded Portfolio Builder to Portfolio Builder & Manager with life stage management, updates/alerts, and sharing features. Added new modules: Advisor Mode (B2B), Life Planning. Added Zerodha MCP integration roadmap and Future Integrations section. Updated Feature Requirements for all new modules. Revised Roadmap to extend through 2027 with key milestones. |
+| 2.3 | Jan 2026 | Product Team | Added Operations & Monitoring section under Technical Architecture: Automated Admin Reports (daily/weekly user reports via Render Cron Jobs with Resend API), User Export Scripts (export_users.py, weekly_new_users.py) for user management and marketing outreach. |
 
 ---
 
