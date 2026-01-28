@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchRankings, fetchIndustryOverview } from '../services/api';
 import { TrendingUp, Users, DollarSign, Activity } from 'lucide-react';
+import StatCard from '../components/StatCard';
+import { PMSCardRanking } from '../components/PMSCard';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   const { data: rankings, isLoading: rankingsLoading } = useQuery({
     queryKey: ['rankings', 2024, 11],
     queryFn: () => fetchRankings(2024, 11, 10),
@@ -32,52 +36,29 @@ export default function Dashboard() {
     <div className="dashboard">
       <h2>Industry Overview - November 2024</h2>
 
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon">
-            <DollarSign size={24} />
-          </div>
-          <div className="stat-content">
-            <span className="stat-label">Total AUM</span>
-            <span className="stat-value">
-              {overviewLoading ? '...' : overview?.data ? formatCrores(overview.data.totalAUM) : 'N/A'}
-            </span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <Activity size={24} />
-          </div>
-          <div className="stat-content">
-            <span className="stat-label">Active PMSes</span>
-            <span className="stat-value">
-              {overviewLoading ? '...' : overview?.data?.totalPMS || 'N/A'}
-            </span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <Users size={24} />
-          </div>
-          <div className="stat-content">
-            <span className="stat-label">Total Clients</span>
-            <span className="stat-value">
-              {overviewLoading ? '...' : overview?.data?.totalClients?.toLocaleString() || 'N/A'}
-            </span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">
-            <TrendingUp size={24} />
-          </div>
-          <div className="stat-content">
-            <span className="stat-label">Net Flow</span>
-            <span className="stat-value">
-              {overviewLoading ? '...' : overview?.data ? formatCrores(overview.data.totalNetFlow) : 'N/A'}
-            </span>
-          </div>
-        </div>
+      {/* Stats Cards - Using new Tailwind components */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <StatCard
+          title="Total AUM"
+          value={overviewLoading ? '...' : overview?.data ? formatCrores(overview.data.totalAUM) : 'N/A'}
+          icon={DollarSign}
+          variant="highlight"
+        />
+        <StatCard
+          title="Active PMSes"
+          value={overviewLoading ? '...' : String(overview?.data?.totalPMS || 'N/A')}
+          icon={Activity}
+        />
+        <StatCard
+          title="Total Clients"
+          value={overviewLoading ? '...' : overview?.data?.totalClients?.toLocaleString() || 'N/A'}
+          icon={Users}
+        />
+        <StatCard
+          title="Net Flow"
+          value={overviewLoading ? '...' : overview?.data ? formatCrores(overview.data.totalNetFlow) : 'N/A'}
+          icon={TrendingUp}
+        />
       </div>
 
       {/* Top PMS by AUM Chart */}
@@ -113,38 +94,25 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Top PMS Table */}
-      <div className="table-section">
-        <h3>Top Performers</h3>
+      {/* Top PMS Cards - Using new Tailwind components */}
+      <div className="mt-8">
+        <h3 className="text-xl font-display font-semibold text-navy-900 mb-4">Top Performers</h3>
         {rankingsLoading ? (
-          <div className="loading">Loading...</div>
+          <div className="text-gray-500">Loading...</div>
         ) : rankings?.data && rankings.data.length > 0 ? (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>PMS Name</th>
-                <th>AUM (Cr)</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rankings.data.map((r) => (
-                <tr key={r.pms.id}>
-                  <td>{r.rank}</td>
-                  <td>{r.pms.name}</td>
-                  <td>{r.aum.toFixed(2)}</td>
-                  <td>
-                    <Link to={`/pms/${r.pms.id}`} className="btn-link">
-                      View Details
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="space-y-3">
+            {rankings.data.map((r) => (
+              <PMSCardRanking
+                key={r.pms.id}
+                rank={r.rank}
+                name={r.pms.name}
+                aum={r.aum}
+                onClick={() => navigate(`/pms/${r.pms.id}`)}
+              />
+            ))}
+          </div>
         ) : (
-          <div className="no-data">No data available</div>
+          <div className="text-gray-500">No data available</div>
         )}
       </div>
     </div>
