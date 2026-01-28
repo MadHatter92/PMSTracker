@@ -15,10 +15,11 @@ import {
 } from 'recharts';
 import { fetchPMSDetails, fetchPMSReports } from '../services/api';
 import Tabs from '../components/Tabs';
+import StatCard from '../components/StatCard';
+import StrategyCard from '../components/StrategyCard';
 import {
   ArrowLeft,
   TrendingUp,
-  TrendingDown,
   BarChart3,
   LineChart as LineChartIcon,
   Wallet,
@@ -126,49 +127,38 @@ export default function PMSDetail() {
         )}
       </div>
 
-      {/* Quick Stats Bar */}
-      <div className="quick-stats-bar">
-        <div className="quick-stat">
-          <DollarSign size={18} />
-          <div className="quick-stat-content">
-            <span className="quick-stat-label">AUM</span>
-            <span className="quick-stat-value">{formatCrores(latestReport?.total_aum ?? null)}</span>
-          </div>
-        </div>
-        <div className="quick-stat">
-          <Users size={18} />
-          <div className="quick-stat-content">
-            <span className="quick-stat-label">Clients</span>
-            <span className="quick-stat-value">{latestReport?.total_clients?.toLocaleString() || 'N/A'}</span>
-          </div>
-        </div>
-        <div className="quick-stat">
-          <Activity size={18} />
-          <div className="quick-stat-content">
-            <span className="quick-stat-label">1M Return</span>
-            <span className={`quick-stat-value ${(latestReport?.return_1m ?? 0) >= 0 ? 'positive' : 'negative'}`}>
-              {formatPercent(latestReport?.return_1m ?? null)}
-            </span>
-          </div>
-        </div>
-        <div className="quick-stat">
-          <TrendingUp size={18} />
-          <div className="quick-stat-content">
-            <span className="quick-stat-label">1Y Return</span>
-            <span className={`quick-stat-value ${(latestReport?.return_1y ?? 0) >= 0 ? 'positive' : 'negative'}`}>
-              {formatPercent(latestReport?.return_1y ?? null)}
-            </span>
-          </div>
-        </div>
-        <div className="quick-stat">
-          <Wallet size={18} />
-          <div className="quick-stat-content">
-            <span className="quick-stat-label">Net Flow</span>
-            <span className={`quick-stat-value ${(latestReport?.net_flow ?? 0) >= 0 ? 'positive' : 'negative'}`}>
-              {formatCrores(latestReport?.net_flow ?? null)}
-            </span>
-          </div>
-        </div>
+      {/* Quick Stats Bar - Tailwind styled */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+        <StatCard
+          title="AUM"
+          value={formatCrores(latestReport?.total_aum ?? null)}
+          icon={DollarSign}
+          variant="compact"
+        />
+        <StatCard
+          title="Clients"
+          value={latestReport?.total_clients?.toLocaleString() || 'N/A'}
+          icon={Users}
+          variant="compact"
+        />
+        <StatCard
+          title="1M Return"
+          value={formatPercent(latestReport?.return_1m ?? null)}
+          icon={Activity}
+          variant="compact"
+        />
+        <StatCard
+          title="1Y Return"
+          value={formatPercent(latestReport?.return_1y ?? null)}
+          icon={TrendingUp}
+          variant="highlight"
+        />
+        <StatCard
+          title="Net Flow"
+          value={formatCrores(latestReport?.net_flow ?? null)}
+          icon={Wallet}
+          variant="compact"
+        />
       </div>
 
       {/* Tabbed Content */}
@@ -504,39 +494,53 @@ export default function PMSDetail() {
               <div className="tab-panel">
                 {latestApproaches.length > 0 ? (
                   <>
-                    <div className="approaches-grid">
+                    {/* Strategy Cards Grid - Tailwind styled */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                       {latestApproaches.map((approach) => (
-                        <div key={approach.id} className="approach-card">
-                          <div className="approach-header">
-                            <h4>{approach.name}</h4>
-                            {approach.benchmark && (
-                              <span className="approach-benchmark">
-                                Benchmark: {approach.benchmark}
-                              </span>
-                            )}
-                          </div>
-                          <div className="approach-metrics">
-                            <div className="approach-metric">
-                              <span className="approach-metric-label">AUM</span>
-                              <span className="approach-metric-value">
-                                {formatCrores(approach.aum)}
-                              </span>
-                            </div>
-                            <div className="approach-metric">
-                              <span className="approach-metric-label">1M Return</span>
-                              <span className={`approach-metric-value ${(approach.return_1m ?? 0) >= 0 ? 'positive' : 'negative'}`}>
-                                {formatPercent(approach.return_1m)}
-                              </span>
-                            </div>
-                            <div className="approach-metric">
-                              <span className="approach-metric-label">1Y Return</span>
-                              <span className={`approach-metric-value ${(approach.return_1y ?? 0) >= 0 ? 'positive' : 'negative'}`}>
-                                {formatPercent(approach.return_1y)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                        <StrategyCard
+                          key={approach.id}
+                          name={approach.name}
+                          aum={approach.aum}
+                          return1m={approach.return_1m}
+                          return1y={approach.return_1y}
+                          benchmark={approach.benchmark}
+                        />
                       ))}
+                    </div>
+
+                    {/* Summary Stats */}
+                    <div className="bg-gradient-to-r from-navy-50 to-saffron-50 rounded-xl p-6 mb-6">
+                      <h3 className="text-lg font-semibold text-navy-900 mb-4">Strategy Summary</h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="text-center">
+                          <p className="text-2xl font-bold text-navy-900">{latestApproaches.length}</p>
+                          <p className="text-sm text-gray-600">Total Strategies</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-2xl font-bold text-navy-900">
+                            {formatCrores(latestApproaches.reduce((sum, a) => sum + (a.aum || 0), 0))}
+                          </p>
+                          <p className="text-sm text-gray-600">Combined AUM</p>
+                        </div>
+                        <div className="text-center">
+                          <p className={`text-2xl font-bold ${
+                            Math.max(...latestApproaches.map(a => a.return_1y || 0)) >= 0
+                              ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {formatPercent(Math.max(...latestApproaches.map(a => a.return_1y || 0)))}
+                          </p>
+                          <p className="text-sm text-gray-600">Best 1Y Return</p>
+                        </div>
+                        <div className="text-center">
+                          <p className={`text-2xl font-bold ${
+                            (latestApproaches.reduce((sum, a) => sum + (a.return_1y || 0), 0) / latestApproaches.length) >= 0
+                              ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {formatPercent(latestApproaches.reduce((sum, a) => sum + (a.return_1y || 0), 0) / latestApproaches.length)}
+                          </p>
+                          <p className="text-sm text-gray-600">Avg 1Y Return</p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Approaches Table */}
@@ -573,8 +577,8 @@ export default function PMSDetail() {
                     </div>
                   </>
                 ) : (
-                  <div className="no-data">
-                    <PieChart size={48} className="no-data-icon" />
+                  <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                    <PieChart size={48} className="mb-4" />
                     <p>No investment approach data available for this PMS</p>
                   </div>
                 )}

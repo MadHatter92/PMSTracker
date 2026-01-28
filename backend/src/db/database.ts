@@ -205,6 +205,38 @@ export function getTopPMSByAUM(year: number, month: number, limit: number = 10):
   }));
 }
 
+export function getTopPMSByReturns(year: number, month: number, limit: number = 10): Array<{
+  pms: PMSRecord;
+  aum: number;
+  return1y: number;
+  return1m: number | null;
+}> {
+  const db = getDatabase();
+  const result = db.exec(
+    `SELECT p.*, mr.total_aum, mr.return_1y, mr.return_1m
+     FROM pms p
+     JOIN monthly_reports mr ON p.id = mr.pms_id
+     WHERE mr.year = ? AND mr.month = ?
+     AND mr.return_1y IS NOT NULL
+     ORDER BY mr.return_1y DESC
+     LIMIT ?`,
+    [year, month, limit]
+  );
+  if (result.length === 0) return [];
+
+  return result[0].values.map(row => ({
+    pms: {
+      id: row[0] as number,
+      sebi_id: row[1] as string,
+      name: row[2] as string,
+      created_at: row[3] as string,
+    },
+    aum: row[4] as number,
+    return1y: row[5] as number,
+    return1m: row[6] as number | null,
+  }));
+}
+
 export function getIndustryStats(year: number, month: number): {
   totalPMS: number;
   totalAUM: number;

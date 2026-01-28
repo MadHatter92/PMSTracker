@@ -65,7 +65,7 @@ export async function fetchPMSReports(
   return response.data;
 }
 
-export async function fetchRankings(year?: number, month?: number, limit?: number) {
+export async function fetchRankingsByAUM(year?: number, month?: number, limit?: number) {
   const params = { year, month, limit };
   const response = await api.get<{
     data: { rank: number; pms: PMS; aum: number }[];
@@ -73,6 +73,18 @@ export async function fetchRankings(year?: number, month?: number, limit?: numbe
   }>('/rankings/aum', { params });
   return response.data;
 }
+
+export async function fetchRankingsByReturns(year?: number, month?: number, limit?: number) {
+  const params = { year, month, limit };
+  const response = await api.get<{
+    data: { rank: number; pms: PMS; aum: number; return1y: number; return1m: number | null }[];
+    period: { year: number; month: number };
+  }>('/rankings/returns', { params });
+  return response.data;
+}
+
+// Legacy alias
+export const fetchRankings = fetchRankingsByAUM;
 
 export async function fetchIndustryOverview(year?: number, month?: number) {
   const params = { year, month };

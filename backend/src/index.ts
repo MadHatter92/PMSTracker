@@ -9,6 +9,7 @@ import {
   getReportsByPeriod,
   getInvestmentApproaches,
   getTopPMSByAUM,
+  getTopPMSByReturns,
   getIndustryStats,
 } from './db/database.js';
 
@@ -106,7 +107,7 @@ async function start() {
       }
     });
 
-    // Rankings
+    // Rankings by AUM
     app.get('/api/rankings/aum', (req, res) => {
       try {
         const {
@@ -131,6 +132,37 @@ async function start() {
         });
       } catch (error) {
         console.error('Error fetching rankings:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    // Rankings by Returns (1Y)
+    app.get('/api/rankings/returns', (req, res) => {
+      try {
+        const {
+          year = new Date().getFullYear().toString(),
+          month = new Date().getMonth().toString(),
+          limit = '10',
+        } = req.query;
+
+        const rankings = getTopPMSByReturns(
+          parseInt(year as string, 10),
+          parseInt(month as string, 10),
+          parseInt(limit as string, 10)
+        );
+
+        res.json({
+          data: rankings.map((r, i) => ({
+            rank: i + 1,
+            pms: r.pms,
+            aum: r.aum,
+            return1y: r.return1y,
+            return1m: r.return1m,
+          })),
+          period: { year: parseInt(year as string, 10), month: parseInt(month as string, 10) },
+        });
+      } catch (error) {
+        console.error('Error fetching return rankings:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
     });

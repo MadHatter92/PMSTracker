@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { fetchRankings, fetchIndustryOverview } from '../services/api';
+import { fetchRankingsByReturns, fetchIndustryOverview } from '../services/api';
 import { TrendingUp, Users, DollarSign, Activity } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import { PMSCardRanking } from '../components/PMSCard';
@@ -10,8 +10,8 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const { data: rankings, isLoading: rankingsLoading } = useQuery({
-    queryKey: ['rankings', 2024, 11],
-    queryFn: () => fetchRankings(2024, 11, 10),
+    queryKey: ['rankings-returns', 2024, 11],
+    queryFn: () => fetchRankingsByReturns(2024, 11, 10),
   });
 
   const { data: overview, isLoading: overviewLoading } = useQuery({
@@ -107,6 +107,7 @@ export default function Dashboard() {
                 rank={r.rank}
                 name={r.pms.name}
                 aum={r.aum}
+                return1y={r.return1y}
                 onClick={() => navigate(`/pms/${r.pms.id}`)}
               />
             ))}
